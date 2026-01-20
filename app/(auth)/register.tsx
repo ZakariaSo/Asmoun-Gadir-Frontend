@@ -35,7 +35,7 @@ export default function RegisterScreen() {
 
   return (
     <LinearGradient
-      colors={["#f093fb", "#764ba2", "#667eea"]}
+      colors={["#eff6ff", "#dbeafe", "#bfdbfe"]}
       style={styles.gradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -53,7 +53,7 @@ export default function RegisterScreen() {
             {/* Header */}
             <View style={styles.header}>
               <View style={styles.iconContainer}>
-                <Ionicons name="person-add" size={60} color="#fff" />
+                <Ionicons name="person-add" size={60} color="#1f22e4ff" />
               </View>
               <Text style={styles.title}>Rejoignez-nous</Text>
               <Text style={styles.subtitle}>Créez votre compte maintenant</Text>
@@ -73,7 +73,7 @@ export default function RegisterScreen() {
                     <Ionicons
                       name="mail-outline"
                       size={20}
-                      color="#764ba2"
+                      color="#2563eb"
                       style={styles.inputIcon}
                     />
                     <TextInput
@@ -100,7 +100,7 @@ export default function RegisterScreen() {
                     <Ionicons
                       name="lock-closed-outline"
                       size={20}
-                      color="#764ba2"
+                      color="#2563eb"
                       style={styles.inputIcon}
                     />
                     <TextInput
@@ -143,7 +143,7 @@ export default function RegisterScreen() {
                 disabled={isLoading}
               >
                 <LinearGradient
-                  colors={["#764ba2", "#f093fb"]}
+                  colors={["#2563eb", "#3b82f6"]}
                   style={styles.button}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
     marginBottom: 8,
     textShadowColor: "rgba(0, 0, 0, 0.2)",
     textShadowOffset: { width: 0, height: 2 },
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: "rgba(255, 255, 255, 0.9)",
+    color: "rgba(44, 43, 43, 0.9)",
     fontWeight: "300",
   },
   card: {
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   termsLink: {
-    color: "#764ba2",
+    color: "#2563eb",
     fontSize: 13,
     fontWeight: "600",
     textDecorationLine: "underline",
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
-    shadowColor: "#764ba2",
+    shadowColor: "#2563eb",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   loginLink: {
-    color: "#764ba2",
+    color: "#2563eb",
     fontSize: 15,
     fontWeight: "bold",
   },
