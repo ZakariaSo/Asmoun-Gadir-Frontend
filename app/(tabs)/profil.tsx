@@ -40,38 +40,38 @@ export default function ProfilScreen() {
             id: 1,
             title: "Mes informations",
             icon: "person-outline",
-            color: "#667eea",
+            color: "#2563eb",
         },
         {
             id: 2,
             title: "Mes réservations",
             icon: "calendar-outline",
-            color: "#764ba2",
+            color: "#3b82f6",
             route: "/(tabs)/reservations",
         },
         {
             id: 3,
             title: "Favoris",
             icon: "heart-outline",
-            color: "#f093fb",
+            color: "#60a5fa",
         },
         {
             id: 4,
             title: "Paramètres",
             icon: "settings-outline",
-            color: "#667eea",
+            color: "#2563eb",
         },
         {
             id: 5,
             title: "Aide & Support",
             icon: "help-circle-outline",
-            color: "#764ba2",
+            color: "#3b82f6",
         },
     ];
 
     return (
         <LinearGradient
-            colors={["#667eea", "#764ba2", "#f093fb"]}
+            colors={["#eff6ff", "#dbeafe", "#bfdbfe"]}
             style={styles.gradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -87,7 +87,7 @@ export default function ProfilScreen() {
                     <View style={styles.profileCard}>
                         <View style={styles.avatarContainer}>
                             <View style={styles.avatar}>
-                                <Ionicons name="person" size={50} color="#667eea" />
+                                <Ionicons name="person" size={50} color="#2563eb" />
                             </View>
                             <View style={styles.statusBadge}>
                                 <Ionicons name="checkmark-circle" size={24} color="#10b981" />
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 28,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#000",
     },
     profileCard: {
         backgroundColor: "rgba(255, 255, 255, 0.95)",
@@ -180,11 +180,11 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        backgroundColor: "rgba(102, 126, 234, 0.1)",
+        backgroundColor: "rgba(37, 99, 235, 0.1)",
         justifyContent: "center",
         alignItems: "center",
         borderWidth: 3,
-        borderColor: "#667eea",
+        borderColor: "#2563eb",
     },
     statusBadge: {
         position: "absolute",
@@ -206,13 +206,13 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     roleBadge: {
-        backgroundColor: "rgba(102, 126, 234, 0.1)",
+        backgroundColor: "rgba(37, 99, 235, 0.1)",
         paddingHorizontal: 16,
         paddingVertical: 6,
         borderRadius: 20,
     },
     roleText: {
-        color: "#667eea",
+        color: "#2563eb",
         fontSize: 13,
         fontWeight: "600",
     },

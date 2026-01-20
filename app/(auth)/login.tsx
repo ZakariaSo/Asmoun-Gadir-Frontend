@@ -38,7 +38,7 @@ export default function LoginScreen() {
 
   return (
     <LinearGradient
-      colors={["#667eea", "#764ba2", "#f093fb"]}
+      colors={["#eff6ff", "#dbeafe", "#bfdbfe"]}
       style={styles.gradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -56,10 +56,10 @@ export default function LoginScreen() {
             {/* Header */}
             <View style={styles.header}>
               <View style={styles.iconContainer}>
-                <Ionicons name="compass" size={60} color="#fff" />
+                <Ionicons name="compass" size={60} color="#1f22e4ff" />
               </View>
               <Text style={styles.title}>Asmoun Gadir</Text>
-              <Text style={styles.subtitle}>Bienvenue de retour</Text>
+              <Text style={styles.subtitle}>Bienvenue </Text>
             </View>
 
             {/* Form Card */}
@@ -76,7 +76,7 @@ export default function LoginScreen() {
                     <Ionicons
                       name="mail-outline"
                       size={20}
-                      color="#667eea"
+                      color="#2563eb"
                       style={styles.inputIcon}
                     />
                     <TextInput
@@ -103,7 +103,7 @@ export default function LoginScreen() {
                     <Ionicons
                       name="lock-closed-outline"
                       size={20}
-                      color="#667eea"
+                      color="#2563eb"
                       style={styles.inputIcon}
                     />
                     <TextInput
@@ -143,7 +143,7 @@ export default function LoginScreen() {
                 disabled={isLoading}
               >
                 <LinearGradient
-                  colors={["#667eea", "#764ba2"]}
+                  colors={["#2563eb", "#3b82f6"]}
                   style={styles.button}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
     marginBottom: 8,
     textShadowColor: "rgba(0, 0, 0, 0.2)",
     textShadowOffset: { width: 0, height: 2 },
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: "rgba(255, 255, 255, 0.9)",
+    color: "rgba(0, 0, 0, 0.9)",
     fontWeight: "300",
   },
   card: {
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   forgotPasswordText: {
-    color: "#667eea",
+    color: "#2563eb",
     fontSize: 14,
     fontWeight: "600",
   },
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
-    shadowColor: "#667eea",
+    shadowColor: "#2563eb",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   registerLink: {
-    color: "#667eea",
+    color: "#2563eb",
     fontSize: 15,
     fontWeight: "bold",
   },

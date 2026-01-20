@@ -21,28 +21,28 @@ export default function HomeScreen() {
             id: 1,
             title: "Activités",
             icon: "compass-outline",
-            color: "#667eea",
+            color: "#2563eb",
             route: "/(tabs)/activities",
         },
         {
             id: 2,
             title: "Réservations",
             icon: "calendar-outline",
-            color: "#764ba2",
+            color: "#3b82f6",
             route: "/(tabs)/reservations",
         },
         {
             id: 3,
             title: "Profil",
             icon: "person-outline",
-            color: "#f093fb",
+            color: "#60a5fa",
             route: "/(tabs)/profil",
         },
     ];
 
     return (
         <LinearGradient
-            colors={["#667eea", "#764ba2", "#f093fb"]}
+            colors={["#eff6ff", "#dbeafe", "#bfdbfe"]}
             style={styles.gradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -68,11 +68,11 @@ export default function HomeScreen() {
                     {/* Welcome Card */}
                     <View style={styles.welcomeCard}>
                         <View style={styles.iconCircle}>
-                            <Ionicons name="compass" size={40} color="#667eea" />
+                            <Ionicons name="compass" size={40} color="#2563eb" />
                         </View>
                         <Text style={styles.welcomeTitle}>Bienvenue sur Asmoun Gadir</Text>
                         <Text style={styles.welcomeText}>
-                            Découvrez les meilleures activités et hébergements du Maroc
+                            Découvrez les meilleures activités et hébergements d'agadir
                         </Text>
                     </View>
 
@@ -105,12 +105,12 @@ export default function HomeScreen() {
                         <Text style={styles.statsTitle}>Vos statistiques</Text>
                         <View style={styles.statsGrid}>
                             <View style={styles.statItem}>
-                                <Ionicons name="calendar" size={24} color="#667eea" />
+                                <Ionicons name="calendar" size={24} color="#2563eb" />
                                 <Text style={styles.statNumber}>0</Text>
                                 <Text style={styles.statLabel}>Réservations</Text>
                             </View>
                             <View style={styles.statItem}>
-                                <Ionicons name="heart" size={24} color="#f093fb" />
+                                <Ionicons name="heart" size={24} color="#3b82f6" />
                                 <Text style={styles.statNumber}>0</Text>
                                 <Text style={styles.statLabel}>Favoris</Text>
                             </View>
@@ -146,13 +146,13 @@ const styles = StyleSheet.create({
     },
     greeting: {
         fontSize: 16,
-        color: "rgba(255, 255, 255, 0.9)",
+        color: "rgba(52, 51, 51, 0.9)",
         fontWeight: "300",
     },
     userName: {
         fontSize: 24,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#000",
         marginTop: 4,
     },
     notificationButton: {
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-        backgroundColor: "rgba(102, 126, 234, 0.1)",
+        backgroundColor: "rgba(37, 99, 235, 0.1)",
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 16,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#fff",
+        color: "#000",
         marginBottom: 16,
     },
     actionsGrid: {
