@@ -63,6 +63,31 @@ export default function RegisterScreen() {
             <View style={styles.card}>
               <Text style={styles.cardTitle}>Inscription</Text>
 
+              {/* Name Input */}
+              <Controller
+                control={control}
+                name="name"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <View style={styles.inputContainer}>
+                    <Ionicons
+                      name="person-outline"
+                      size={20}
+                      color="#2563eb"
+                      style={styles.inputIcon}
+                    />
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Nom complet"
+                      placeholderTextColor="#999"
+                      onChangeText={field.onChange}
+                      value={field.value}
+                      autoCapitalize="words"
+                    />
+                  </View>
+                )}
+              />
+
               {/* Email Input */}
               <Controller
                 control={control}

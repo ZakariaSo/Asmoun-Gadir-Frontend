@@ -16,10 +16,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useActivity } from "../../hooks/useActivity";
 import { createReservation } from "../../services/reservation";
+import { useAuthStore } from "../../store/authStore";
 
 export default function ReserveScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
+    const { user } = useAuthStore();
     const { data: activity, isLoading: isLoadingActivity } = useActivity(Number(id));
 
     const [places, setPlaces] = useState(1);
@@ -40,11 +42,17 @@ export default function ReserveScreen() {
     };
 
     const handleConfirmBooking = async () => {
+        if (!user) {
+            Alert.alert("Erreur", "Vous devez être connecté pour réserver.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             await createReservation({
                 activityId: Number(id),
-                numberOfPlaces: places
+                numberOfPlaces: places,
+                touristId: user.id
             });
 
             Alert.alert(
@@ -57,8 +65,10 @@ export default function ReserveScreen() {
                     }
                 ]
             );
-        } catch (error) {
-            Alert.alert("Erreur", "Une erreur est survenue lors de la réservation.");
+        } catch (error: any) {
+            console.error("Reservation error:", error.response?.data || error.message);
+            const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de la réservation.";
+            Alert.alert("Erreur", errorMessage);
         } finally {
             setIsSubmitting(false);
         }

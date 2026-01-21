@@ -70,7 +70,9 @@ const ReservationCard = ({ item }: { item: Reservation }) => {
       <View style={styles.cardHeader}>
         <View style={styles.reservationNumber}>
           <Ionicons name="ticket-outline" size={20} color="#2563eb" />
-          <Text style={styles.reservationId}>Réservation #{item.id}</Text>
+          <Text style={styles.reservationId}>
+            {item.activity?.title || `Réservation #${item.id}`}
+          </Text>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }]}>
           <Ionicons name={getStatusIcon(item.status) as any} size={14} color={statusColor} />

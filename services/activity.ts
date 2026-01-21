@@ -3,7 +3,7 @@ import api from "./api";
 
 export const getActivities = async (): Promise<Activity[]> => {
   const res = await api.get("/activities");
-  return res.data;
+  return res.data.activities || res.data;
 };
 
 export const getActivityById = async (id: number): Promise<Activity> => {
