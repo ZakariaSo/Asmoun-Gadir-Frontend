@@ -5,5 +5,8 @@ export const useMyReservations = () => {
   return useQuery({
     queryKey: ["myReservations"],
     queryFn: getMyReservations,
+    staleTime: 0, 
+    refetchOnMount: true, 
+    refetchOnWindowFocus: true, 
   });
 };

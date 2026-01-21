@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -22,6 +23,7 @@ export default function ReserveScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { user } = useAuthStore();
+    const queryClient = useQueryClient();
     const { data: activity, isLoading: isLoadingActivity } = useActivity(Number(id));
 
     const [places, setPlaces] = useState(1);
@@ -49,19 +51,38 @@ export default function ReserveScreen() {
 
         setIsSubmitting(true);
         try {
-            await createReservation({
+            const result = await createReservation({
                 activityId: Number(id),
                 numberOfPlaces: places,
                 touristId: user.id
             });
+
+            console.log("Réservation créée:", result);
+
+            // Invalider le cache pour forcer le rafraîchissement
+            await queryClient.invalidateQueries({ queryKey: ["myReservations"] });
+            
+            // Également invalider les activités si nécessaire
+            await queryClient.invalidateQueries({ queryKey: ["activity", Number(id)] });
 
             Alert.alert(
                 "Succès !",
                 "Votre réservation a été enregistrée avec succès.",
                 [
                     {
+                        text: "Retour",
+                        style: "cancel",
+                        onPress: () => router.back()
+                    },
+                    {
                         text: "Voir mes réservations",
-                        onPress: () => router.replace("/(tabs)/reservations")
+                        onPress: () => {
+                            // Ferme l'écran actuel puis navigue
+                            router.back();
+                            setTimeout(() => {
+                                router.push("/(tabs)/reservations");
+                            }, 300);
+                        }
                     }
                 ]
             );

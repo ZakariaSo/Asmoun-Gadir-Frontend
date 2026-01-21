@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,12 +16,19 @@ import { useMyReservations } from "../../hooks/useMyReservations";
 import { Reservation } from "../../types/reservation";
 
 const getStatusColor = (status: string) => {
-  switch (status) {
+  const s = status?.toLowerCase();
+  switch (s) {
     case "confirmed":
+    case "confirmé":
+    case "confirme":
       return "#10b981";
     case "pending":
+    case "en_attente":
+    case "en attente":
       return "#f59e0b";
     case "cancelled":
+    case "annulé":
+    case "annule":
       return "#ef4444";
     default:
       return "#6b7280";
@@ -28,12 +36,19 @@ const getStatusColor = (status: string) => {
 };
 
 const getStatusLabel = (status: string) => {
-  switch (status) {
+  const s = status?.toLowerCase();
+  switch (s) {
     case "confirmed":
+    case "confirmé":
+    case "confirme":
       return "Confirmée";
     case "pending":
+    case "en_attente":
+    case "en attente":
       return "En attente";
     case "cancelled":
+    case "annulé":
+    case "annule":
       return "Annulée";
     default:
       return status;
@@ -41,12 +56,19 @@ const getStatusLabel = (status: string) => {
 };
 
 const getStatusIcon = (status: string) => {
-  switch (status) {
+  const s = status?.toLowerCase();
+  switch (s) {
     case "confirmed":
+    case "confirmé":
+    case "confirme":
       return "checkmark-circle";
     case "pending":
+    case "en_attente":
+    case "en attente":
       return "time";
     case "cancelled":
+    case "annulé":
+    case "annule":
       return "close-circle";
     default:
       return "help-circle";
@@ -123,29 +145,6 @@ const ReservationCard = ({ item }: { item: Reservation }) => {
   );
 };
 
-const EmptyState = () => (
-  <View style={styles.emptyContainer}>
-    <View style={styles.emptyIconContainer}>
-      <Ionicons name="calendar-outline" size={80} color="#bfdbfe" />
-    </View>
-    <Text style={styles.emptyTitle}>Aucune réservation</Text>
-    <Text style={styles.emptyText}>
-      Vous n'avez pas encore effectué de réservation. Explorez nos activités pour commencer !
-    </Text>
-    <TouchableOpacity style={styles.exploreButton}>
-      <LinearGradient
-        colors={["#2563eb", "#3b82f6"]}
-        style={styles.exploreButtonGradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-      >
-        <Ionicons name="compass-outline" size={20} color="#fff" />
-        <Text style={styles.exploreButtonText}>Explorer les activités</Text>
-      </LinearGradient>
-    </TouchableOpacity>
-  </View>
-);
-
 const LoadingState = () => (
   <View style={styles.loadingContainer}>
     <ActivityIndicator size="large" color="#2563eb" />
@@ -154,7 +153,42 @@ const LoadingState = () => (
 );
 
 export default function ReservationsScreen() {
+  const router = useRouter();
   const { data, isLoading, refetch, isRefetching } = useMyReservations();
+
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("ReservationsScreen focused - refreshing data");
+      refetch();
+    }, [refetch])
+  );
+
+  const EmptyState = () => (
+    <View style={styles.emptyContainer}>
+      <View style={styles.emptyIconContainer}>
+        <Ionicons name="calendar-outline" size={80} color="#bfdbfe" />
+      </View>
+      <Text style={styles.emptyTitle}>Aucune réservation</Text>
+      <Text style={styles.emptyText}>
+        Vous n'avez pas encore effectué de réservation. Explorez nos activités pour commencer !
+      </Text>
+      <TouchableOpacity
+        style={styles.exploreButton}
+        onPress={() => router.push("/(tabs)/home")}
+      >
+        <LinearGradient
+          colors={["#2563eb", "#3b82f6"]}
+          style={styles.exploreButtonGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <Ionicons name="compass-outline" size={20} color="#fff" />
+          <Text style={styles.exploreButtonText}>Explorer les activités</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <LinearGradient
