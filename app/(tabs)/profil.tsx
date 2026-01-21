@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import {
     Alert,
+    RefreshControl,
     ScrollView,
     StyleSheet,
     Text,
@@ -12,10 +13,12 @@ import {
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useProfile } from "../../hooks/useProfile";
 
 export default function ProfilScreen() {
     const router = useRouter();
     const { user, logout } = useAuthStore();
+    const { refetch, isRefetching } = useProfile();
 
     const handleLogout = () => {
         Alert.alert(
@@ -77,7 +80,16 @@ export default function ProfilScreen() {
             end={{ x: 1, y: 1 }}
         >
             <SafeAreaView style={styles.container}>
-                <ScrollView style={styles.scrollView}>
+                <ScrollView
+                    style={styles.scrollView}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isRefetching}
+                            onRefresh={() => refetch()}
+                            tintColor="#2563eb"
+                        />
+                    }
+                >
                     {/* Header */}
                     <View style={styles.header}>
                         <Text style={styles.headerTitle}>Mon Profil</Text>
@@ -94,7 +106,7 @@ export default function ProfilScreen() {
                             </View>
                         </View>
                         <Text style={styles.userName}>
-                            {user?.email?.split("@")[0] || "Utilisateur"}
+                            {user?.name || user?.email?.split("@")[0] || "Utilisateur"}
                         </Text>
                         <Text style={styles.userEmail}>{user?.email || ""}</Text>
                         <View style={styles.roleBadge}>
