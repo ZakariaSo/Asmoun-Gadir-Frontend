@@ -7,4 +7,6 @@ export type Reservation = {
   status: "pending" | "confirmed" | "cancelled";
   createdAt: string;
   activity?: Activity;
+  touristId?: number;
+  id_touriste?: number;
 };

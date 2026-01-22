@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { useFocusEffect, useRouter } from "expo-router";
+import { router, useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -12,7 +14,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAllReservations } from "../../hooks/useAllReservations";
 import { useMyReservations } from "../../hooks/useMyReservations";
+import { validateReservation } from "../../services/reservation";
+import { useAuthStore } from "../../store/authStore";
 import { Reservation } from "../../types/reservation";
 
 const getStatusColor = (status: string) => {
@@ -84,11 +89,15 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const ReservationCard = ({ item }: { item: Reservation }) => {
+const ReservationCard = ({ item, isAdmin, onValidate }: { item: Reservation, isAdmin: boolean, onValidate?: (id: number) => void }) => {
   const statusColor = getStatusColor(item.status);
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => router.push(`/reservation/${item.id}`)}
+      activeOpacity={0.7}
+    >
       <View style={styles.cardHeader}>
         <View style={styles.reservationNumber}>
           <Ionicons name="ticket-outline" size={20} color="#2563eb" />
@@ -105,6 +114,12 @@ const ReservationCard = ({ item }: { item: Reservation }) => {
       </View>
 
       <View style={styles.cardContent}>
+        {isAdmin && (
+          <View style={styles.adminInfo}>
+            <Ionicons name="person-outline" size={16} color="#6b7280" />
+            <Text style={styles.adminText}>Client ID: {item.touristId || item.id_touriste || 'N/A'}</Text>
+          </View>
+        )}
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <View style={styles.infoIcon}>
@@ -136,26 +151,47 @@ const ReservationCard = ({ item }: { item: Reservation }) => {
       </View>
 
       <View style={styles.cardActions}>
-        <TouchableOpacity style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>Voir détails</Text>
-          <Ionicons name="chevron-forward" size={16} color="#2563eb" />
-        </TouchableOpacity>
+        <View style={styles.actionButtonsContainer}>
+          <View style={styles.actionButton}>
+            <Text style={styles.actionButtonText}>Voir détails</Text>
+            <Ionicons name="chevron-forward" size={16} color="#2563eb" />
+          </View>
+
+          {isAdmin && (item.status?.toLowerCase() === "pending" || item.status?.toLowerCase() === "en attente" || item.status?.toLowerCase() === "en_attente") && (
+            <TouchableOpacity
+              style={styles.validateButton}
+              onPress={(e) => {
+                e.stopPropagation();
+                onValidate?.(item.id);
+              }}
+            >
+              <Ionicons name="checkmark" size={16} color="#fff" />
+              <Text style={styles.validateButtonText}>Valider</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
-const LoadingState = () => (
+const LoadingState = ({ message }: { message: string }) => (
   <View style={styles.loadingContainer}>
     <ActivityIndicator size="large" color="#2563eb" />
-    <Text style={styles.loadingText}>Chargement de vos réservations...</Text>
+    <Text style={styles.loadingText}>{message}</Text>
   </View>
 );
 
 export default function ReservationsScreen() {
   const router = useRouter();
-  const { data, isLoading, refetch, isRefetching } = useMyReservations();
+  const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+  const isAdmin = user?.role === "admin";
 
+  const myReservations = useMyReservations();
+  const allReservations = useAllReservations();
+
+  const { data, isLoading, refetch, isRefetching } = isAdmin ? allReservations : myReservations;
 
   useFocusEffect(
     useCallback(() => {
@@ -164,6 +200,28 @@ export default function ReservationsScreen() {
     }, [refetch])
   );
 
+  const handleValidate = async (id: number) => {
+    Alert.alert(
+      "Valider la réservation",
+      "Voulez-vous confirmer cette réservation ?",
+      [
+        { text: "Annuler", style: "cancel" },
+        {
+          text: "Confirmer",
+          onPress: async () => {
+            try {
+              await validateReservation(id);
+              Alert.alert("Succès", "Réservation confirmée");
+              queryClient.invalidateQueries({ queryKey: [isAdmin ? "allReservations" : "myReservations"] });
+            } catch (error: any) {
+              Alert.alert("Erreur", "Impossible de valider la réservation");
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const EmptyState = () => (
     <View style={styles.emptyContainer}>
       <View style={styles.emptyIconContainer}>
@@ -171,22 +229,26 @@ export default function ReservationsScreen() {
       </View>
       <Text style={styles.emptyTitle}>Aucune réservation</Text>
       <Text style={styles.emptyText}>
-        Vous n'avez pas encore effectué de réservation. Explorez nos activités pour commencer !
+        {isAdmin
+          ? "Il n'y a aucune réservation enregistrée dans le système pour le moment."
+          : "Vous n'avez pas encore effectué de réservation. Explorez nos activités pour commencer !"}
       </Text>
-      <TouchableOpacity
-        style={styles.exploreButton}
-        onPress={() => router.push("/(tabs)/home")}
-      >
-        <LinearGradient
-          colors={["#2563eb", "#3b82f6"]}
-          style={styles.exploreButtonGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+      {!isAdmin && (
+        <TouchableOpacity
+          style={styles.exploreButton}
+          onPress={() => router.push("/(tabs)/home")}
         >
-          <Ionicons name="compass-outline" size={20} color="#fff" />
-          <Text style={styles.exploreButtonText}>Explorer les activités</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+          <LinearGradient
+            colors={["#2563eb", "#3b82f6"]}
+            style={styles.exploreButtonGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Ionicons name="compass-outline" size={20} color="#fff" />
+            <Text style={styles.exploreButtonText}>Explorer les activités</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -200,7 +262,9 @@ export default function ReservationsScreen() {
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Mes Réservations</Text>
+          <Text style={styles.headerTitle}>
+            {isAdmin ? "Toutes les Réservations" : "Mes Réservations"}
+          </Text>
           <TouchableOpacity
             style={styles.refreshButton}
             onPress={() => refetch()}
@@ -211,14 +275,20 @@ export default function ReservationsScreen() {
 
         {/* Content */}
         {isLoading ? (
-          <LoadingState />
+          <LoadingState message={isAdmin ? "Chargement de toutes les réservations..." : "Chargement de vos réservations..."} />
         ) : !data || data.length === 0 ? (
           <EmptyState />
         ) : (
           <FlatList
             data={data}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <ReservationCard item={item} />}
+            renderItem={({ item }) => (
+              <ReservationCard
+                item={item}
+                isAdmin={isAdmin}
+                onValidate={handleValidate}
+              />
+            )}
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -361,11 +431,44 @@ const styles = StyleSheet.create({
     borderTopColor: "#f3f4f6",
     padding: 12,
   },
+  actionButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 4,
+  },
+  validateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#10b981",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  validateButtonText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  adminInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginBottom: 8,
+    backgroundColor: "#f3f4f6",
+    padding: 8,
+    borderRadius: 8,
+  },
+  adminText: {
+    fontSize: 12,
+    color: "#6b7280",
+    fontWeight: "500",
   },
   actionButtonText: {
     fontSize: 14,

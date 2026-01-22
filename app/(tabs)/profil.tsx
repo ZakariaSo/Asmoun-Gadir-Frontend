@@ -111,7 +111,9 @@ export default function ProfilScreen() {
                         <Text style={styles.userEmail}>{user?.email || ""}</Text>
                         <View style={styles.roleBadge}>
                             <Text style={styles.roleText}>
-                                {user?.role === "tourist" ? "Touriste" : user?.role || ""}
+                                {user?.role === "accommodation" ? "Prestataire Hébergement" :
+                                    user?.role === "tourist" ? "Touriste" :
+                                        user?.role || "Utilisateur"}
                             </Text>
                         </View>
                     </View>
