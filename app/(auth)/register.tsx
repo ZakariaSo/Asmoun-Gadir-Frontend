@@ -21,13 +21,18 @@ export default function RegisterScreen() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<"tourist" | "accommodation">("tourist");
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     try {
-      await register({ ...data, role: "tourist" });
+      const payload = { ...data, role: selectedRole };
+
+      const res = await register(payload);
+
       router.replace("/(auth)/login");
-    } catch {
+    } catch (error: any) {
+      console.error("Registration error:", error);
       alert("Erreur inscription");
       setIsLoading(false);
     }
@@ -151,6 +156,54 @@ export default function RegisterScreen() {
                   </View>
                 )}
               />
+
+              {/* Role Selection */}
+              <Text style={styles.sectionLabel}>Type de compte</Text>
+              <View style={styles.roleContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.roleOption,
+                    selectedRole === "tourist" && styles.roleOptionActive,
+                  ]}
+                  onPress={() => setSelectedRole("tourist")}
+                >
+                  <Ionicons
+                    name="person"
+                    size={24}
+                    color={selectedRole === "tourist" ? "#fff" : "#2563eb"}
+                  />
+                  <Text
+                    style={[
+                      styles.roleOptionText,
+                      selectedRole === "tourist" && styles.roleOptionTextActive,
+                    ]}
+                  >
+                    Touriste
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.roleOption,
+                    selectedRole === "accommodation" && styles.roleOptionActive,
+                  ]}
+                  onPress={() => setSelectedRole("accommodation")}
+                >
+                  <Ionicons
+                    name="business"
+                    size={24}
+                    color={selectedRole === "accommodation" ? "#fff" : "#2563eb"}
+                  />
+                  <Text
+                    style={[
+                      styles.roleOptionText,
+                      selectedRole === "accommodation" && styles.roleOptionTextActive,
+                    ]}
+                  >
+                    Hébergement
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
               {/* Terms and Conditions */}
               <View style={styles.termsContainer}>
@@ -335,5 +388,42 @@ const styles = StyleSheet.create({
     color: "#2563eb",
     fontSize: 15,
     fontWeight: "bold",
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  roleContainer: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 20,
+  },
+  roleOption: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    backgroundColor: "#f5f5f5",
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  roleOptionActive: {
+    backgroundColor: "#2563eb",
+    borderColor: "#2563eb",
+  },
+  roleOptionText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666",
+  },
+  roleOptionTextActive: {
+    color: "#fff",
   },
 });
